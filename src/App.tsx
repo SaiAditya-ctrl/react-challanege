@@ -13,19 +13,18 @@ export function App() {
   const { data: paginatedTransactions, ...paginatedTransactionsUtils } = usePaginatedTransactions()
   const { data: transactionsByEmployee, ...transactionsByEmployeeUtils } = useTransactionsByEmployee()
   const [isLoading, setIsLoading] = useState(false)
-const [selectedId,setSelectedId]=useState("")
   const transactions = useMemo(
     () => paginatedTransactions?.data ?? transactionsByEmployee ?? null,
     [paginatedTransactions, transactionsByEmployee]
   )
 //console.log(paginatedTransactions,"papaginatedTransactions")
   const loadAllTransactions = useCallback(async () => {
-    setIsLoading(true)
+    
     transactionsByEmployeeUtils.invalidateData()
 
     await employeeUtils.fetchAll()
     console.log(employeeUtils,"emmmmm")
-    await setIsLoading(false)
+    
     await paginatedTransactionsUtils.fetchAll()
    
 
@@ -43,6 +42,7 @@ const [selectedId,setSelectedId]=useState("")
   )
 
   useEffect(() => {
+    setIsLoading(employeeUtils.loading)
     if (employees === null && !employeeUtils.loading) {
       loadAllTransactions()
     }
@@ -72,26 +72,26 @@ const [selectedId,setSelectedId]=useState("")
             if (newValue === null) {
               return
             }
-            else if(newValue?.id==""){
-              loadAllTransactions()
+            else if(newValue?.id===""){
+              await loadAllTransactions()
             }
             else{
              
             await loadTransactionsByEmployee(newValue.id)
             }
-            setSelectedId(newValue.id)
+            
           }}
         />
 
         <div className="RampBreak--l" />
 
         <div className="RampGrid">
-          <Transactions transactions={transactions} isloading={employeeUtils.loading} />
+          <Transactions transactions={transactions}  />
 
-          {transactions !== null && (
+          {paginatedTransactions?.nextPage && transactions !== null && (
             <button
               className="RampButton"
-              disabled={selectedId!=="" || paginatedTransactions?.nextPage==null}
+              disabled={paginatedTransactionsUtils.loading}
               onClick={ () => {
                  loadAllTransactions()
               }}

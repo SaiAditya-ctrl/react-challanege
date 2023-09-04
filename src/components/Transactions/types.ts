@@ -8,7 +8,6 @@ export type SetTransactionApprovalFunction = (params: {
 
 type TransactionsProps = {
    transactions: Transaction[] | null 
-   isloading:boolean
 
 }
 

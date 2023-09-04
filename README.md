@@ -12,7 +12,7 @@ You will submit a CodeSandbox link with your response.
 
 - `node`
 - `npm` or `yarn`
-- [CodeSandbox](https://codesandbox.io)
+- [CodeSandbox]
 
 ### Coding
 
